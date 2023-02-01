@@ -315,7 +315,7 @@ var initMap = function() {
   var layer_GoogleTerrain_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
     pane: 'pane_GoogleTerrain_1',
     opacity: 1.0,
-    attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2022 Google</a>',
+    attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2023 Google</a>',
     minZoom: 1,
     maxZoom: 28,
     minNativeZoom: 0,
@@ -328,7 +328,7 @@ var initMap = function() {
   var layer_GoogleSatellite_2 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
     pane: 'pane_GoogleSatellite_2',
     opacity: 1.0,
-    attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2022 Google</a>',
+    attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2023 Google</a>',
     minZoom: 1,
     maxZoom: 28,
     minNativeZoom:0,
@@ -398,7 +398,7 @@ var initMap = function() {
   map.attributionControl.setPrefix(' Go \
     to <a href="https://sljiv.sanimardani.com" target="_blank"> \
     Sumalindo Lestari Jaya IV</a> | <a href="http://leafletjs.com" title="A JS library\
-    for interactive maps">Leaflet</a> | &#169; Sanimardani Resources 2022');
+    for interactive maps">Leaflet</a> | &#169; Sanimardani Resources 2023');
 
   // Add custom `home` control
   addHomeButton({
