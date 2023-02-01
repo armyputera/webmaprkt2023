@@ -62,13 +62,17 @@ var updateSidebar = function(marker) {
 
     // Populate place information into the sidebar
     $('#placeInfo').animate({opacity: 0.5}, 300).promise().done(function() {
-      $('#placeInfo h2').html(d.kode_pohon);
-      $('#placeInfo h3').html(d.nama_lokal+' ( <i>'+d.nama_latin+ '</i> )');
+      $('#placeInfo h2').html(d.barcode_pohon);
+      $('#placeInfo h3').html(d.nomor_pohon+' ( '+d.jenis_pohon+ ' )');
       $('#description').html(
         '<table>\
           <tr>\
-            <th scope="row">Status IUCN</th>\
-            <td>'+d.status_iucn+'</td>\
+            <th scope="row">Nomor Petak</th>\
+            <td>'+d.nomor_petak+'</td>\
+          </tr>\
+          <tr>\
+            <th scope="row">Luas Petak</th>\
+            <td>'+d.luas_petak+' Ha </td>\
           </tr>\
           <tr>\
             <th scope="row">Latitude</th>\
@@ -79,68 +83,40 @@ var updateSidebar = function(marker) {
             <td>'+d.Longitude+'</td>\
           </tr>\
           <tr>\
-            <th scope="row">Perhutanan Sosial</th>\
-            <td>'+d.unit_PS+'</td>\
+            <th scope="row">Nomor Jalur</th>\
+            <td>'+d.nomor_jalur+'</td>\
           </tr>\
           <tr>\
-            <th scope="row">Nama Khas Wilayah</th>\
-            <td>'+d.nama_khas_wilayah+'</td>\
+            <th scope="row">Arah Jalur</th>\
+            <td>'+d.arah_jalur+'</td>\
           </tr>\
           <tr>\
-            <th scope="row">Jenis Lahan</th>\
-            <td>'+d.jenis_lahan+'</td>\
+            <th scope="row">Panjang Pohon</th>\
+            <td>'+d.panjang_pohon+' cm </td>\
           </tr>\
           <tr>\
-            <th scope="row">Diameter</th>\
-            <td>'+d.diameter+' cm </td>\
+            <th scope="row">Pangkal Pohon</th>\
+            <td>'+d.pangkal_pohon+' cm </td>\
           </tr>\
           <tr>\
-            <th scope="row">Tinggi</th>\
-            <td>'+d.tinggi+' m </td>\
+            <th scope="row">Ujung Pohon</th>\
+            <td>'+d.ujung_pohon+' cm </td>\
           </tr>\
           <tr>\
-            <th scope="row">Jarak Permukiman</th>\
-            <td>'+d.jarak_permukiman+' km </td>\
+            <th scope="row">Rata-Rata Pohon</th>\
+            <td>'+d.rata_rata_pohon+' cm </td>\
           </tr>\
           <tr>\
-            <th scope="row">Status Adopsi</th>\
-            <td>'+d.status_adopsi+'</td>\
+            <th scope="row">Volume Pohon</th>\
+            <td>'+d.volume_pohon+' m3 </td>\
           </tr>\
           <tr>\
-            <th scope="row">Nama Pengadopsi</th>\
-            <td>'+d.nama_pengadopsi+'</td>\
-          </tr>\
-          <tr>\
-            <th scope="row">Masa Berlaku</th>\
-            <td>'+d.masa_berlaku+'</td>\
-          </tr>\
-          <tr>\
-            <th scope="row">Nama Surveyor</th>\
-            <td>'+d.nama_surveyor+'</td>\
-          </tr>\
-          <tr>\
-            <th scope="row">Waktu Survei</th>\
-            <td>'+d.waktu_survei+'</td>\
-          </tr>\
-          <tr>\
-            <th scope="row">Harga Adopsi</th>\
-            <td> Rp '+d.harga_adopsi+'</td>\
-          </tr>\
-          <tr>\
-            <th scope="row">Serapan Karbon</th>\
-            <td>'+d.serapan_karbon+' Kg </td>\
-          </tr>\
-          <tr>\
-            <th scope="row">Penyedia Bibit</th>\
-            <td>'+d.penyedia_bibit+'</td>\
-          </tr>\
-          <tr>\
-            <th scope="row">Metode Perhitungan Karbon</th>\
-            <td>'+d.metode_karbon+'</td>\
+            <th scope="row">Nomor Produk</th>\
+            <td>'+d.no_produk+'</td>\
           </tr>\
         </table>'
       );
-    
+      
       if (d.chart_link) {
         $('#googleMaps').removeClass('dn').addClass('dt').attr('href', d.chart_link);
       } else {
@@ -156,21 +132,21 @@ var updateSidebar = function(marker) {
 
         if (d[idx]) {
 
-          // var source = "<em class='normal'>" + d[idx + 'Source'] + '</em>';
+          var source = "<em class='normal'>" + d[idx + 'Source'] + '</em>';
 
-          // if (source && d[idx + 'SourceLink']) {
-          //   source = "<a href='" + d[idx + 'SourceLink'] + "' target='_blank'>" + source + "</a>";
-          // }
+          if (source && d[idx + 'SourceLink']) {
+           source = "<a href='" + d[idx + 'SourceLink'] + "' target='_blank'>" + source + "</a>";
+           }
 
-          var a = $('<a/>', {
+           var a = $('<a/>', {
             href: d[idx],
             'data-lightbox': 'gallery',
             //'data-title': ( d[idx + 'Caption'] + ' ' + source )  || '',
-            'data-alt': d.kode_pohon,
+            'data-alt': d.barcode_pohon,
             'class': i === 1 ? '' : 'dn'
           });
 
-          var img = $('<img/>', { src: d[idx], alt: d.kode_pohon, class: 'dim br1' });
+          var img = $('<img/>', { src: d[idx], alt: d.barcode_pohon, class: 'dim br1' });
           $('#gallery').append( a.append(img) );
 
           if (i === 1) {
@@ -189,7 +165,7 @@ var updateSidebar = function(marker) {
         }
       }
 
-      $('#placeInfo').animate({ opacity: 1 }, 300);
+      $('#placeInfo h2').animate({ opacity: 1 }, 300);
 
       // Scroll sidebar to focus on the place's title
       $('#sidebar').animate({
@@ -212,8 +188,10 @@ var addMarkers = function(data) {
   for (var i in data) {
     var d = data[i];
 
+   // Check if Latitude and Longitude are not undefined
+   if (d.Latitude && d.Longitude) {
     // Create a slug for URL hash, and add to marker data
-    d['slug'] = slugify(d.id);
+    d['slug'] = slugify(d.nomor_pohon);
 
     // Add an empty group if doesn't yet exist
     if (!groups[d.Group]) { groups[d.Group] = []; }
@@ -232,7 +210,7 @@ var addMarkers = function(data) {
         placeInfo: d
       },
     ).on('click', function(e) {
-      map.flyTo(this._latlng, 20);
+      map.flyTo(this._latlng, 16);
       updateSidebar(this);
     });
 
@@ -242,16 +220,17 @@ var addMarkers = function(data) {
 
     if (d.slug === hashName) { activeMarker = m; }
   }
+ }
 
   // Transform each array of markers into layerGroup
   for (var g in groups) {
     groups[g] = L.layerGroup(groups[g]);
 
     // By default, show all markers
-    groups[g].addTo(map);
+    //groups['Sudah Tebang'].addTo(map);
   }
   
-  L.control.layers({}, groups, {collapsed: true, position: 'bottomright'}).addTo(map);
+  L.control.layers({}, groups, {collapsed: true, position: 'topright'}).addTo(map);
   //$('.leaflet-control-layers-overlays').prepend('<h3 class="mt0 mb1 f5 black-30">Legend</h3>');
 
   // If name in hash, activate it
@@ -265,7 +244,7 @@ var addMarkers = function(data) {
  */
 var loadData = function(loc) {
 
-  Papa.parse(loc, {
+  Papa.parse('https://raw.githubusercontent.com/armyputera/webmaprkt2023/main/data/Format_Web_SLJIV.csv', {
     header: true,
     download: true,
     complete: function(results) {
@@ -323,7 +302,7 @@ var initMap = function() {
   var layer_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     pane: 'pane_OSMStandard_0',
     opacity: 1.0,
-    attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+    attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap</a> \ contributors',
     minZoom: 1,
     maxZoom: 28,
     minNativeZoom:0,
@@ -336,7 +315,7 @@ var initMap = function() {
   var layer_GoogleTerrain_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
     pane: 'pane_GoogleTerrain_1',
     opacity: 1.0,
-    attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+    attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2022 Google</a>',
     minZoom: 1,
     maxZoom: 28,
     minNativeZoom: 0,
@@ -349,7 +328,7 @@ var initMap = function() {
   var layer_GoogleSatellite_2 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
     pane: 'pane_GoogleSatellite_2',
     opacity: 1.0,
-    attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+    attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2022 Google</a>',
     minZoom: 1,
     maxZoom: 28,
     minNativeZoom:0,
@@ -375,82 +354,27 @@ var initMap = function() {
       interactive: true,
     }
   }
-//style when hovered
-function highlightFeature(e) {
-   var layer = e.target;
 
-   layer.setStyle({
-      opacity: 1,
-      color: 'rgba(35,35,35,1.0)',
-      dashArray: '',
-      lineCap: 'butt',
-      lineJoin: 'miter',
-      weight: 3.0,
-      fill: true,
-      fillOpacity: 1,
-      fillColor: 'rgba(135,116,158,0.3)',
-      interactive: true,
-   });
+  map.createPane('pane_SumalindoLestariJayaIV');
+  map.getPane('pane_SumalindoLestariJayaIV').style.zIndex = 1;
+  map.getPane('pane_SumalindoLestariJayaIV').style['mix-blend-mode'] = 'normal';
 
-   if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-      layer.bringToFront();
-   }
-   info.update(layer.feature.properties); 
-}
-//reset hover state
-function resetHighlight(e) {
-   layer_BatasKawasan.resetStyle(e.target);
-   info.update(); 
-}
-//zoom while clicking
-function zoomToFeature(e) {
-   map.fitBounds(e.target.getBounds());
-}
-// event listener package
-function onEachFeature(feature, layer) {
-   layer.on({
-      mouseover: highlightFeature,
-      mouseout: resetHighlight,
-      click: zoomToFeature
-   });
-}
-
-  map.createPane('pane_PohonAdopsiMinastahura_4');
-  map.getPane('pane_PohonAdopsiMinastahura_4').style.zIndex = 1;
-  map.getPane('pane_PohonAdopsiMinastahura_4').style['mix-blend-mode'] = 'normal';
-
-  layer_BatasKawasan = L.geoJson(json_BatasKawasanTahuraSultanSyarifQasim_3,{
+  layer_BatasKawasan = L.geoJson(json_PAK2023,{
     attribution: '',
     interactive: true,
-    dataVar: 'json_BatasKawasanTahuraSultanSyarifQasim_3',
-    layerName: 'layer_BatasKawasanTahuraSultanSyarifQasim_3',
-    style: style_bataskawasan,
-    onEachFeature: onEachFeature,
-    //pane: 'pane_PohonAdopsiMinastahura_4'
+    dataVar: 'json_PAK2023',
+    layerName: 'layer_PAK2023',
+    style: style_bataskawasan
+  
+    //pane: 'pane_SumalindoLestariJayaIV'
   });
   map.addLayer(layer_BatasKawasan);
 
-//Get "kabupat" from Geojsonfile for area information when hovered
-var info = L.control();
-info.onAdd = function (map) {
-   this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-   this.update();
-   return this._div;
-};
-
-// method that we will use to update the control based on feature properties passed
-info.update = function (props) {
-   this._div.innerHTML = '<h4>Daerah</h4>' + (props ?
-      props.kabupat
-      : '');
-};
-info.addTo(map);
-
   //group basemaps
   basemaps= {
-    "Peta Dasar (OSM Standard)":layer_OSMStandard_0,
-    "Peta Dasar (Google Terrain)": layer_GoogleTerrain_1,
-    "Peta Dasar (Google Satellite)": layer_GoogleSatellite_2
+    "OpenStreetMap":layer_OSMStandard_0,
+    "Google Terrain": layer_GoogleTerrain_1,
+    "Google Satellite": layer_GoogleSatellite_2
   };
 
   // Add to map all basemaps
@@ -471,11 +395,10 @@ info.addTo(map);
   loadData(dataLocation);
 
   // Add data & GitHub links
-  map.attributionControl.setPrefix('Download <a href="'
-    + dataLocation + '" target="_blank">data</a> or \
-    view <a href="https://github.com/Simarmata12Soni/webmap_adopsipohon1_" target="_blank">code on\
-    GitHub</a> | created with <a href="http://leafletjs.com" title="A JS library\
-    for interactive maps">Leaflet</a>');
+  map.attributionControl.setPrefix(' Go \
+    to <a href="https://sljiv.sanimardani.com" target="_blank"> \
+    Sumalindo Lestari Jaya IV</a> | <a href="http://leafletjs.com" title="A JS library\
+    for interactive maps">Leaflet</a> | &#169; Sanimardani Resources 2022');
 
   // Add custom `home` control
   addHomeButton({
